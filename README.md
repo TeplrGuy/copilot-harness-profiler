@@ -141,8 +141,9 @@ The initial release was exercised on Windows with Node 26 and a Copilot extensio
 - Two metadata-only CLI exports were imported through the UI. The nested-agent run showed two tools, four model calls, zero recorded failures, and the identifier-linked task → explore → model/tool relationship.
 - Browser interaction covered session search and selection, sequence and expandable tree views, stable inspection during refresh, coverage cards, and reviewed export preview.
 - Fifteen automated tests cover adapters, accounting, deduplication, persistence, content consent/redaction, partial-line following/truncation, deletion boundaries, import revisions, and HTTP access controls.
+- The published `v0.1.0` folder was installed into a clean session extension scope. All ten package files matched the source after line-ending normalization; discovery, open/actions, rendering, and access to persisted history passed.
 
-These observations do not verify a live VS Code editor, remote/cloud capture, every SDK event type, or other operating systems. The CI matrix separately checks Node 22/24 on Windows and Linux.
+These observations do not verify a live VS Code editor, remote/cloud capture, every SDK event type, or canvas rendering on other operating systems. The automated CI matrix passed Node 22/24 on both Windows and Linux.
 
 ## License
 
