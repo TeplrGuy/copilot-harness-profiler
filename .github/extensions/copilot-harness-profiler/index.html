@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Copilot Harness Profiler</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header>
+    <div><span class="eyebrow">LOCAL-FIRST / EXECUTION INTELLIGENCE</span><h1>Harness Profiler<span class="accent">.</span></h1><p>Follow the work, not just the token count.</p></div>
+    <div class="header-actions"><span class="badge" id="capture-status">Connecting</span><button id="refresh">Refresh</button></div>
+  </header>
+  <div id="error" role="alert" hidden></div>
+  <nav aria-label="Profiler views">
+    <button class="tab active" data-tab="sessions" aria-current="page">Sessions</button>
+    <button class="tab" data-tab="sources">Sources &amp; setup</button>
+    <button class="tab" data-tab="privacy">Privacy &amp; sharing</button>
+  </nav>
+  <main>
+    <section id="sessions-view">
+      <div class="metrics" id="metrics"></div>
+      <div class="section-heading"><div><h2>Session explorer</h2><p>Only observed and imported sessions. Not an account-wide inventory.</p></div><span id="session-count" class="muted"></span></div>
+      <div class="filters"><label>Search<input id="search" type="search" placeholder="Session ID, source, model..."></label><label>Source<select id="source-filter"><option value="">All sources</option></select></label><label>Model<select id="model-filter"><option value="">All models</option></select></label><label>Since<input id="since" type="date"></label><label>Outcome<select id="outcome"><option value="">All outcomes</option><option value="failed">Has failures</option><option value="incomplete">Incomplete calls</option></select></label></div>
+      <div class="workspace"><aside id="session-list" aria-label="Recorded sessions"></aside><article id="detail"><div class="empty"><span class="empty-symbol">[ ]</span><h2>Your execution story, in one place.</h2><p>Select a session to inspect its tools, skills, model calls and agent relationships.</p><button data-show="sources">Connect a source</button></div></article></div>
+    </section>
+    <section id="sources-view" hidden>
+      <div class="section-heading"><div><h2>Know your coverage</h2><p>A canvas is a viewer. Each execution host needs a working data source.</p></div></div>
+      <div class="coverage-grid" id="coverage"></div>
+      <div class="card"><h3>Import or follow a local trace file</h3><p>Remote/cloud traces must first be retained and transferred explicitly. Original files are never modified. Maximum import: 32 MiB.</p>
+        <form id="import-form"><label>Absolute JSONL file path<input id="import-path" required placeholder="C:\traces\copilot.jsonl"></label><div class="filters"><label>Format<select id="import-format"><option value="otel">Copilot / VS Code OpenTelemetry</option><option value="harness">Harness Profiler v2 (Claude)</option></select></label><label>Execution host<select id="import-surface"><option value="remote">Remote / cloud / unspecified</option><option value="cli">Copilot CLI</option><option value="vscode">VS Code Copilot / Agent Host</option><option value="local">VS Code Local</option><option value="harness">Claude / Harness Profiler</option></select></label><label>Source label<input id="import-label" maxlength="80" placeholder="My CLI / remote host"></label></div><label class="inline"><input id="import-content" type="checkbox"> Include content (requires privacy opt-in)</label><button type="submit">Preview import</button></form>
+        <div id="import-preview" aria-live="polite"></div>
+      </div>
+      <div class="card"><h3>Registered files</h3><p>Read every five seconds while a provider is active. Exporters continue writing even when the canvas is closed. “Receiving” is not an end-to-end verification badge.</p><div id="registered"></div></div>
+      <div class="card"><h3>Local file-export setup</h3><p>These are configuration previews, not automatic changes. Preserve existing telemetry destinations and managed policy. Start a new session after configuration, then verify the file before registering it.</p>
+        <h4>Copilot CLI / shared runtime - current PowerShell only</h4>
+        <pre id="cli-setup"></pre><p>Set this in the process that launches the client. A running desktop app does not inherit changes made in another shell. Desktop/Agent Host managed configuration may require an administrator; do not edit managed policy to bypass restrictions.</p>
+        <h4>VS Code Local harness - merge into user settings</h4>
+        <pre id="vscode-setup"></pre><p>These extension settings are not proof that Agent Host exports to the same file. Confirm the selected harness and actual output. Do not replace an existing exporter without reviewing its destination.</p>
+        <h4>Cloud agent</h4><p>Repository hooks can capture partial metadata in the cloud sandbox, but files there are ephemeral. Retain an export through your approved workflow, transfer it explicitly, and import it here. No cloud instrumentation or uploading is performed by this canvas.</p>
+        <p><a href="https://docs.github.com/en/copilot/reference/enterprise-administrators/opentelemetry-reference" target="_blank" rel="noreferrer">Shared-runtime reference</a> / <a href="https://code.visualstudio.com/docs/agents/guides/monitoring-agents" target="_blank" rel="noreferrer">VS Code monitoring</a></p>
+      </div>
+      <div class="card"><h3>Collection diagnostics</h3><div id="diagnostics"></div></div>
+    </section>
+    <section id="privacy-view" hidden>
+      <div class="section-heading"><div><h2>Your machine. Your traces.</h2><p>No hosted service, telemetry upload, or automatic trace sharing.</p></div></div>
+      <div class="card"><h3>Capture controls</h3><label class="inline"><input id="paused" type="checkbox"> Pause new collection and registered-file ingestion</label><label class="inline"><input id="content" type="checkbox"> Optional content capture</label><p>Content may include prompts, source code, arguments, outputs and secrets. Pattern masking is imperfect. Opting out affects future writes; it does not erase previously saved content. Imported files discard content unless explicitly included.</p><p id="storage" class="mono"></p><p>History is retained until you explicitly delete a selected session. Remove a registered source before deleting its imported history to prevent it being reimported. Original files are never deleted.</p></div>
+      <div class="card"><h3>Share the canvas, not your sessions</h3><p>The public package contains only code and assets. Install it through Copilot's extension installer from the repository folder, or use “Share extension as gist” and the matching install command. Installing code does not transfer your traces.</p><a href="https://github.com/TeplrGuy/copilot-harness-profiler" target="_blank" rel="noreferrer">Source, install instructions &amp; coverage</a><p>Session exports are separate. Preview a metadata-only export from a session before downloading it. Review names and optional content before sending it anywhere.</p></div>
+    </section>
+  </main>
+  <footer><span>Copilot Harness Profiler <span id="version"></span></span><span>Inspired by Harness Profiler / metadata by default</span></footer>
+</body>
+</html>

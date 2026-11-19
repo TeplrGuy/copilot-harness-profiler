@@ -1,0 +1,11 @@
+{
+  "name": "copilot-harness-profiler",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check .github/extensions/copilot-harness-profiler/extension.mjs && node --check .github/extensions/copilot-harness-profiler/app.js"
+  }
+}
